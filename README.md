@@ -5,5 +5,5 @@
 ### This comand will create pvc
 #### `kubectl apply -f pvc-satisfactory.yml`
 ### this command will make Pod and Service
-#### `kubectl apply -fsatisfactory.yml`
+#### `kubectl apply -f satisfactory.yml`
 
