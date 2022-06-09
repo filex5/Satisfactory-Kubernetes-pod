@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: satisfactory-server
+  namespace: default
+  labels:
+    environment: production
+    app: satisfactory-server
+spec:
+   hostname: satisfactory-server
+   restartPolicy: Always
+   volumes:
+   - name: satisfactory
+     persistentVolumeClaim:
+       claimName: satisfactory     
+   containers:
+   - name : satisfactory-server
+     image: wolveix/satisfactory-server:latest
+     volumeMounts:
+     - name: satisfactory
+       mountPath: "/config"
+     env:
+     - name: MAXPLAYERS
+       value: "4"
+     - name: PGID
+       value: "1000"
+     - name: PUID
+       value: "1000"
+     - name: STEAMBETA
+       value: "false"
+     ports:
+     - containerPort: 7777
+       protocol: UDP
+     - containerPort: 15000
+       protocol: UDP
+     - containerPort: 15777
+       protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: satisfactory-server
+spec:
+  selector:
+    app: satisfactory-server
+  ports:
+  - name: sat1
+    protocol: UDP
+    port: 15777
+    targetPort: 15777
+  - name: sat2
+    protocol: UDP
+    port: 15000
+    targetPort: 15000
+  - name: sat3
+    protocol: UDP
+    port: 7777
+    targetPort: 7777
+  type: LoadBalancer
+
